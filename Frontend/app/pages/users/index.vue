@@ -21,24 +21,109 @@ const columnFilters = ref([{
 const columnVisibility = ref()
 const rowSelection = ref({ 1: true })
 
-const { data, status } = await useFetch<User[]>('/api/customers', {
-  lazy: true
+// Моковые данные пользователей
+const users: User[] = [
+  {
+    id: 1,
+    name: 'Администратор',
+    email: 'admin@sml.ru',
+    avatar: {
+      src: 'https://i.pravatar.cc/128?u=admin'
+    },
+    status: 'subscribed',
+    location: 'Москва, Россия'
+  },
+  {
+    id: 2,
+    name: 'Иван Петров',
+    email: 'ivan.petrov@sml.ru',
+    avatar: {
+      src: 'https://i.pravatar.cc/128?u=ivan'
+    },
+    status: 'subscribed',
+    location: 'Санкт-Петербург, Россия'
+  },
+  {
+    id: 3,
+    name: 'Мария Сидорова',
+    email: 'maria.sidorova@sml.ru',
+    avatar: {
+      src: 'https://i.pravatar.cc/128?u=maria'
+    },
+    status: 'subscribed',
+    location: 'Новосибирск, Россия'
+  },
+  {
+    id: 4,
+    name: 'Алексей Козлов',
+    email: 'alexey.kozlov@sml.ru',
+    avatar: {
+      src: 'https://i.pravatar.cc/128?u=alexey'
+    },
+    status: 'unsubscribed',
+    location: 'Екатеринбург, Россия'
+  },
+  {
+    id: 5,
+    name: 'Елена Волкова',
+    email: 'elena.volkova@sml.ru',
+    avatar: {
+      src: 'https://i.pravatar.cc/128?u=elena'
+    },
+    status: 'subscribed',
+    location: 'Казань, Россия'
+  },
+  {
+    id: 6,
+    name: 'Дмитрий Соколов',
+    email: 'dmitry.sokolov@sml.ru',
+    avatar: {
+      src: 'https://i.pravatar.cc/128?u=dmitry'
+    },
+    status: 'bounced',
+    location: 'Нижний Новгород, Россия'
+  },
+  {
+    id: 7,
+    name: 'Анна Морозова',
+    email: 'anna.morozova@sml.ru',
+    avatar: {
+      src: 'https://i.pravatar.cc/128?u=anna'
+    },
+    status: 'subscribed',
+    location: 'Самара, Россия'
+  },
+  {
+    id: 8,
+    name: 'Сергей Новиков',
+    email: 'sergey.novikov@sml.ru',
+    avatar: {
+      src: 'https://i.pravatar.cc/128?u=sergey'
+    },
+    status: 'subscribed',
+    location: 'Омск, Россия'
+  }
+]
+
+const { data, status } = await useFetch<User[]>('/api/users', {
+  lazy: true,
+  default: () => users
 })
 
 function getRowItems(row: Row<User>) {
   return [
     {
       type: 'label',
-      label: 'Actions'
+      label: 'Действия'
     },
     {
-      label: 'Copy customer ID',
+      label: 'Копировать ID пользователя',
       icon: 'i-lucide-copy',
       onSelect() {
         navigator.clipboard.writeText(row.original.id.toString())
         toast.add({
-          title: 'Copied to clipboard',
-          description: 'Customer ID copied to clipboard'
+          title: 'Скопировано в буфер обмена',
+          description: 'ID пользователя скопирован в буфер обмена'
         })
       }
     },
@@ -46,24 +131,28 @@ function getRowItems(row: Row<User>) {
       type: 'separator'
     },
     {
-      label: 'View customer details',
-      icon: 'i-lucide-list'
+      label: 'Просмотр профиля',
+      icon: 'i-lucide-user'
     },
     {
-      label: 'View customer payments',
-      icon: 'i-lucide-wallet'
+      label: 'Редактировать пользователя',
+      icon: 'i-lucide-edit'
+    },
+    {
+      label: 'Сбросить пароль',
+      icon: 'i-lucide-key'
     },
     {
       type: 'separator'
     },
     {
-      label: 'Delete customer',
+      label: 'Удалить пользователя',
       icon: 'i-lucide-trash',
       color: 'error',
       onSelect() {
         toast.add({
-          title: 'Customer deleted',
-          description: 'The customer has been deleted.'
+          title: 'Пользователь удален',
+          description: 'Пользователь был удален из системы.'
         })
       }
     }
@@ -80,13 +169,13 @@ const columns: TableColumn<User>[] = [
           : table.getIsAllPageRowsSelected(),
         'onUpdate:modelValue': (value: boolean | 'indeterminate') =>
           table.toggleAllPageRowsSelected(!!value),
-        'ariaLabel': 'Select all'
+        'ariaLabel': 'Выбрать все'
       }),
     cell: ({ row }) =>
       h(UCheckbox, {
         'modelValue': row.getIsSelected(),
         'onUpdate:modelValue': (value: boolean | 'indeterminate') => row.toggleSelected(!!value),
-        'ariaLabel': 'Select row'
+        'ariaLabel': 'Выбрать строку'
       })
   },
   {
@@ -95,7 +184,7 @@ const columns: TableColumn<User>[] = [
   },
   {
     accessorKey: 'name',
-    header: 'Name',
+    header: 'Имя',
     cell: ({ row }) => {
       return h('div', { class: 'flex items-center gap-3' }, [
         h(UAvatar, {
@@ -104,7 +193,7 @@ const columns: TableColumn<User>[] = [
         }),
         h('div', undefined, [
           h('p', { class: 'font-medium text-highlighted' }, row.original.name),
-          h('p', { class: '' }, `@${row.original.name}`)
+          h('p', { class: 'text-sm text-muted' }, row.original.email)
         ])
       ])
     }
@@ -130,23 +219,26 @@ const columns: TableColumn<User>[] = [
   },
   {
     accessorKey: 'location',
-    header: 'Location',
+    header: 'Местоположение',
     cell: ({ row }) => row.original.location
   },
   {
     accessorKey: 'status',
-    header: 'Status',
+    header: 'Статус',
     filterFn: 'equals',
     cell: ({ row }) => {
-      const color = {
-        subscribed: 'success' as const,
-        unsubscribed: 'error' as const,
-        bounced: 'warning' as const
-      }[row.original.status]
+      const statusMap = {
+        subscribed: { color: 'success' as const, label: 'Активен' },
+        unsubscribed: { color: 'error' as const, label: 'Неактивен' },
+        bounced: { color: 'warning' as const, label: 'Заблокирован' }
+      }
+      const status = statusMap[row.original.status]
 
-      return h(UBadge, { class: 'capitalize', variant: 'subtle', color }, () =>
-        row.original.status
-      )
+      return h(UBadge, { 
+        class: 'capitalize', 
+        variant: 'subtle', 
+        color: status.color 
+      }, () => status.label)
     }
   },
   {
@@ -198,15 +290,21 @@ const pagination = ref({
 </script>
 
 <template>
-  <UDashboardPanel id="customers">
+  <UDashboardPanel id="users">
     <template #header>
-      <UDashboardNavbar title="Customers">
+      <UDashboardNavbar title="Пользователи">
         <template #leading>
           <UDashboardSidebarCollapse />
         </template>
 
         <template #right>
-          <CustomersAddModal />
+          <UButton
+            icon="i-lucide-user-plus"
+            size="md"
+            class="rounded-full"
+          >
+            Добавить пользователя
+          </UButton>
         </template>
       </UDashboardNavbar>
     </template>
@@ -217,37 +315,35 @@ const pagination = ref({
           :model-value="(table?.tableApi?.getColumn('email')?.getFilterValue() as string)"
           class="max-w-sm"
           icon="i-lucide-search"
-          placeholder="Filter emails..."
+          placeholder="Поиск по email..."
           @update:model-value="table?.tableApi?.getColumn('email')?.setFilterValue($event)"
         />
 
         <div class="flex flex-wrap items-center gap-1.5">
-          <CustomersDeleteModal :count="table?.tableApi?.getFilteredSelectedRowModel().rows.length">
-            <UButton
-              v-if="table?.tableApi?.getFilteredSelectedRowModel().rows.length"
-              label="Delete"
-              color="error"
-              variant="subtle"
-              icon="i-lucide-trash"
-            >
-              <template #trailing>
-                <UKbd>
-                  {{ table?.tableApi?.getFilteredSelectedRowModel().rows.length }}
-                </UKbd>
-              </template>
-            </UButton>
-          </CustomersDeleteModal>
+          <UButton
+            v-if="table?.tableApi?.getFilteredSelectedRowModel().rows.length"
+            label="Удалить выбранных"
+            color="error"
+            variant="subtle"
+            icon="i-lucide-trash"
+          >
+            <template #trailing>
+              <UKbd>
+                {{ table?.tableApi?.getFilteredSelectedRowModel().rows.length }}
+              </UKbd>
+            </template>
+          </UButton>
 
           <USelect
             v-model="statusFilter"
             :items="[
-              { label: 'All', value: 'all' },
-              { label: 'Subscribed', value: 'subscribed' },
-              { label: 'Unsubscribed', value: 'unsubscribed' },
-              { label: 'Bounced', value: 'bounced' }
+              { label: 'Все', value: 'all' },
+              { label: 'Активные', value: 'subscribed' },
+              { label: 'Неактивные', value: 'unsubscribed' },
+              { label: 'Заблокированные', value: 'bounced' }
             ]"
             :ui="{ trailingIcon: 'group-data-[state=open]:rotate-180 transition-transform duration-200' }"
-            placeholder="Filter status"
+            placeholder="Фильтр по статусу"
             class="min-w-28"
           />
           <UDropdownMenu
@@ -270,7 +366,7 @@ const pagination = ref({
             :content="{ align: 'end' }"
           >
             <UButton
-              label="Display"
+              label="Отображение"
               color="neutral"
               variant="outline"
               trailing-icon="i-lucide-settings-2"
@@ -303,8 +399,8 @@ const pagination = ref({
 
       <div class="flex items-center justify-between gap-3 border-t border-default pt-4 mt-auto">
         <div class="text-sm text-muted">
-          {{ table?.tableApi?.getFilteredSelectedRowModel().rows.length || 0 }} of
-          {{ table?.tableApi?.getFilteredRowModel().rows.length || 0 }} row(s) selected.
+          {{ table?.tableApi?.getFilteredSelectedRowModel().rows.length || 0 }} из
+          {{ table?.tableApi?.getFilteredRowModel().rows.length || 0 }} строк выбрано.
         </div>
 
         <div class="flex items-center gap-1.5">

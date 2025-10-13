@@ -7,14 +7,14 @@ const toast = useToast()
 const open = ref(false)
 
 const links = [[{
-  label: 'Home',
+  label: 'Главная',
   icon: 'i-lucide-house',
   to: '/',
   onSelect: () => {
     open.value = false
   }
 }, {
-  label: 'Inbox',
+  label: 'Входящие',
   icon: 'i-lucide-inbox',
   to: '/inbox',
   badge: '4',
@@ -22,66 +22,98 @@ const links = [[{
     open.value = false
   }
 }, {
-  label: 'Customers',
+  label: 'Пользователи',
+  icon: 'i-lucide-user-check',
+  to: '/users',
+  onSelect: () => {
+    open.value = false
+  }
+}, {
+  label: 'Группы',
   icon: 'i-lucide-users',
   to: '/customers',
   onSelect: () => {
     open.value = false
   }
 }, {
-  label: 'Settings',
+  label: 'Лаборатории',
+  icon: 'i-lucide-flask-conical',
+  to: '/laboratories',
+  onSelect: () => {
+    open.value = false
+  }
+}, {
+  label: 'Курсы',
+  icon: 'i-lucide-book-open',
+  to: '/courses',
+  onSelect: () => {
+    open.value = false
+  }
+}, {
+  label: 'Модули',
+  icon: 'i-lucide-puzzle',
+  to: '/modules',
+  onSelect: () => {
+    open.value = false
+  }
+}, {
+  label: 'Настройки',
   to: '/settings',
   icon: 'i-lucide-settings',
-  defaultOpen: true,
+  defaultOpen: false,
   type: 'trigger',
   children: [{
-    label: 'General',
+    label: 'Общие',
     to: '/settings',
     exact: true,
     onSelect: () => {
       open.value = false
     }
   }, {
-    label: 'Members',
+    label: 'Участники',
     to: '/settings/members',
     onSelect: () => {
       open.value = false
     }
   }, {
-    label: 'Notifications',
+    label: 'Уведомления',
     to: '/settings/notifications',
     onSelect: () => {
       open.value = false
     }
   }, {
-    label: 'Security',
+    label: 'Безопасность',
     to: '/settings/security',
     onSelect: () => {
       open.value = false
     }
   }]
 }], [{
-  label: 'Feedback',
-  icon: 'i-lucide-message-circle',
-  to: 'https://github.com/nuxt-ui-templates/dashboard',
-  target: '_blank'
+  label: 'Войти',
+  icon: 'i-lucide-log-in',
+  to: '/login',
+  onSelect: () => {
+    open.value = false
+  }
 }, {
-  label: 'Help & Support',
+  label: 'Помощь и поддержка',
   icon: 'i-lucide-info',
-  to: 'https://github.com/nuxt-ui-templates/dashboard',
-  target: '_blank'
+  to: '/help',
+  onSelect: () => {
+    open.value = false
+  }
 }]] satisfies NavigationMenuItem[][]
 
 const groups = computed(() => [{
   id: 'links',
-  label: 'Go to',
+  label: 'Перейти к',
   items: links.flat()
 }, {
   id: 'code',
-  label: 'Code',
+  label: 'Код',
   items: [{
     id: 'source',
-    label: 'View page source',
+    label: 'Просмотр исходного кода страницы',
     icon: 'i-simple-icons-github',
     to: `https://github.com/nuxt-ui-templates/dashboard/blob/main/app/pages${route.path === '/' ? '/index' : route.path}.vue`,
     target: '_blank'
@@ -95,18 +127,18 @@ onMounted(async () => {
   }
 
   toast.add({
-    title: 'We use first-party cookies to enhance your experience on our website.',
+    title: 'Мы используем собственные файлы cookie для улучшения вашего опыта на нашем веб-сайте.',
     duration: 0,
     close: false,
     actions: [{
-      label: 'Accept',
+      label: 'Принять',
       color: 'neutral',
       variant: 'outline',
       onClick: () => {
         cookie.value = 'accepted'
       }
     }, {
-      label: 'Opt out',
+      label: 'Отказаться',
       color: 'neutral',
       variant: 'ghost'
     }]

@@ -1,8 +1,26 @@
 <script setup lang="ts">
 const { isNotificationsSlideoverOpen } = useDashboard()
 
+// Типы для курсов
+type CourseStatus = 'active' | 'upcoming' | 'completed'
+type CourseLevel = 'beginner' | 'intermediate' | 'advanced'
+
+interface Course {
+  id: number
+  title: string
+  description: string
+  instructor: string
+  duration: string
+  students: number
+  status: CourseStatus
+  startDate: string
+  endDate: string
+  level: CourseLevel
+  category: string
+}
+
 // Моковые данные курсов
-const courses = ref([
+const courses = ref<Course[]>([
   {
     id: 1,
     title: 'Основы программирования',
@@ -70,25 +88,25 @@ const courses = ref([
   }
 ])
 
-const statusColors = {
+const statusColors: Record<CourseStatus, 'success' | 'info' | 'neutral'> = {
   active: 'success',
   upcoming: 'info',
   completed: 'neutral'
 }
 
-const statusLabels = {
+const statusLabels: Record<CourseStatus, string> = {
   active: 'Активный',
   upcoming: 'Предстоящий',
   completed: 'Завершен'
 }
 
-const levelColors = {
-  beginner: 'green',
-  intermediate: 'blue',
-  advanced: 'purple'
+const levelColors: Record<CourseLevel, 'success' | 'info' | 'warning'> = {
+  beginner: 'success',
+  intermediate: 'info',
+  advanced: 'warning'
 }
 
-const levelLabels = {
+const levelLabels: Record<CourseLevel, string> = {
   beginner: 'Начальный',
   intermediate: 'Средний',
   advanced: 'Продвинутый'
@@ -193,16 +211,16 @@ const levelLabels = {
                 <div class="flex items-center gap-3 mb-2">
                   <h3 class="text-lg font-semibold">{{ course.title }}</h3>
                   <UBadge
-                    :color="statusColors[course.status]"
+                    :color="statusColors[course.status as CourseStatus]"
                     variant="subtle"
                   >
-                    {{ statusLabels[course.status] }}
+                    {{ statusLabels[course.status as CourseStatus] }}
                   </UBadge>
                   <UBadge
-                    :color="levelColors[course.level]"
+                    :color="levelColors[course.level as CourseLevel]"
                     variant="outline"
                   >
-                    {{ levelLabels[course.level] }}
+                    {{ levelLabels[course.level as CourseLevel] }}
                   </UBadge>
                 </div>
 

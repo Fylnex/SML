@@ -31,7 +31,7 @@ const links = [[{
 }, {
   label: 'Группы',
   icon: 'i-lucide-users',
-  to: '/customers',
+  to: '/groups',
   onSelect: () => {
     open.value = false
   }

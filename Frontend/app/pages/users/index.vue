@@ -302,6 +302,7 @@ const pagination = ref({
             icon="i-lucide-user-plus"
             size="md"
             class="rounded-full"
+            @click="navigateTo('/users/create')"
           >
             Добавить пользователя
           </UButton>

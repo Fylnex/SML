@@ -19,6 +19,7 @@
     "@vueuse/nuxt": "^13.9.0",
     "date-fns": "^4.1.0",
     "nuxt": "^4.1.2",
+    "transliteration": "^2.3.5",
     "zod": "^4.1.11"
   },
   "devDependencies": {

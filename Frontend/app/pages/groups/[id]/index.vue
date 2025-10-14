@@ -176,17 +176,19 @@ const toast = useToast()
 <template>
   <UDashboardPanel id="group-detail">
     <template #header>
-      <UDashboardNavbar :title="group.name">
+      <UDashboardNavbar>
         <template #leading>
           <UDashboardSidebarCollapse />
-          <UButton
-            icon="i-lucide-arrow-left"
-            variant="ghost"
-            color="neutral"
-            @click="$router.back()"
-          >
-            Назад
-          </UButton>
+          <nav class="flex items-center space-x-2 text-sm">
+            <NuxtLink 
+              to="/groups" 
+              class="text-primary hover:underline"
+            >
+              Группы
+            </NuxtLink>
+            <UIcon name="i-lucide-chevron-right" class="size-4 text-muted" />
+            <span class="text-muted">{{ group.name }}</span>
+          </nav>
         </template>
 
         <template #right>
@@ -310,7 +312,7 @@ const toast = useToast()
 
             <UCard>
               <template #header>
-                <h3 class="text-lg font-semibold">Быстрые действия</h3>
+                <h3 class="text-lg font-semibold">Действия</h3>
               </template>
               
               <div class="space-y-2">
@@ -319,6 +321,7 @@ const toast = useToast()
                   variant="outline"
                   color="primary"
                   block
+                  @click="$router.push(`/groups/${group.id}/students`)"
                 >
                   Список студентов
                 </UButton>
@@ -360,6 +363,7 @@ const toast = useToast()
                 icon="i-lucide-plus"
                 size="sm"
                 color="primary"
+                @click="$router.push(`/groups/${group.id}/students`)"
               >
                 Добавить студента
               </UButton>

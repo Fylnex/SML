@@ -200,6 +200,7 @@ const stats = computed(() => ({
             icon="i-lucide-users-plus"
             size="md"
             class="rounded-full"
+            @click="$router.push('/groups/create')"
           >
             Добавить группу
           </UButton>
@@ -437,7 +438,7 @@ const stats = computed(() => ({
                      size="sm"
                      variant="ghost"
                      color="info"
-                     @click="$router.push(`/groups/${group.id}`)"
+                     @click="$router.push(`/groups/${group.id}/students`)"
                    >
                      Студенты
                    </UButton>

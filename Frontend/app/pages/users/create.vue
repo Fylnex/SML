@@ -11,7 +11,7 @@ const form = ref({
   lastName: '',
   firstName: '',
   middleName: '',
-  role: '' as 'admin' | 'teacher' | '',
+  role: '' as 'root' | 'admin' | 'teacher' | '',
   password: '',
   confirmPassword: ''
 })
@@ -285,14 +285,14 @@ const handleSubmit = async () => {
                  <label class="flex items-center gap-3 p-4 border border-default rounded-lg cursor-pointer hover:bg-muted/50 transition-colors">
                    <URadio
                      v-model="form.role"
-                     value="teacher"
+                     value="root"
                      :disabled="isSubmitting"
                    />
                    <div class="flex items-center gap-3">
-                     <UIcon name="i-lucide-graduation-cap" class="text-xl text-primary" />
+                     <UIcon name="i-lucide-crown" class="text-xl text-warning" />
                      <div>
-                       <div class="font-medium">Преподаватель</div>
-                       <div class="text-sm text-muted">Обычный доступ к системе</div>
+                       <div class="font-medium">Root</div>
+                       <div class="text-sm text-muted">Супер-администратор с доступом к модулям</div>
                      </div>
                    </div>
                  </label>
@@ -308,6 +308,21 @@ const handleSubmit = async () => {
                      <div>
                        <div class="font-medium">Администратор</div>
                        <div class="text-sm text-muted">Полный доступ ко всем функциям</div>
+                     </div>
+                   </div>
+                 </label>
+
+                 <label class="flex items-center gap-3 p-4 border border-default rounded-lg cursor-pointer hover:bg-muted/50 transition-colors">
+                   <URadio
+                     v-model="form.role"
+                     value="teacher"
+                     :disabled="isSubmitting"
+                   />
+                   <div class="flex items-center gap-3">
+                     <UIcon name="i-lucide-graduation-cap" class="text-xl text-primary" />
+                     <div>
+                       <div class="font-medium">Преподаватель</div>
+                       <div class="text-sm text-muted">Обычный доступ к системе</div>
                      </div>
                    </div>
                  </label>
@@ -360,13 +375,13 @@ const handleSubmit = async () => {
               </div>
             </div>
 
-            <div class="flex items-center gap-2">
-              <UBadge
-                :color="form.role === 'admin' ? 'error' : 'primary'"
-                variant="subtle"
-              >
-                {{ form.role === 'admin' ? 'Администратор' : 'Преподаватель' }}
-              </UBadge>
+             <div class="flex items-center gap-2">
+               <UBadge
+                 :color="form.role === 'root' ? 'warning' : form.role === 'admin' ? 'error' : 'primary'"
+                 variant="subtle"
+               >
+                 {{ form.role === 'root' ? 'Root' : form.role === 'admin' ? 'Администратор' : 'Преподаватель' }}
+               </UBadge>
               
               <UBadge
                 color="success"

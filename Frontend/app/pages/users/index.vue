@@ -25,83 +25,93 @@ const rowSelection = ref({ 1: true })
 const users: User[] = [
   {
     id: 1,
+    name: 'root',
+    email: 'root@sml.ru',
+    avatar: {
+      src: 'https://i.pravatar.cc/128?u=root'
+    },
+    status: 'subscribed',
+    role: 'root'
+  },
+  {
+    id: 2,
     name: 'Администратор',
     email: 'admin@sml.ru',
     avatar: {
       src: 'https://i.pravatar.cc/128?u=admin'
     },
     status: 'subscribed',
-    location: 'Москва, Россия'
+    role: 'admin'
   },
   {
-    id: 2,
+    id: 3,
     name: 'Иван Петров',
     email: 'ivan.petrov@sml.ru',
     avatar: {
       src: 'https://i.pravatar.cc/128?u=ivan'
     },
     status: 'subscribed',
-    location: 'Санкт-Петербург, Россия'
+    role: 'teacher'
   },
   {
-    id: 3,
+    id: 4,
     name: 'Мария Сидорова',
     email: 'maria.sidorova@sml.ru',
     avatar: {
       src: 'https://i.pravatar.cc/128?u=maria'
     },
     status: 'subscribed',
-    location: 'Новосибирск, Россия'
+    role: 'teacher'
   },
   {
-    id: 4,
+    id: 5,
     name: 'Алексей Козлов',
     email: 'alexey.kozlov@sml.ru',
     avatar: {
       src: 'https://i.pravatar.cc/128?u=alexey'
     },
     status: 'unsubscribed',
-    location: 'Екатеринбург, Россия'
+    role: 'teacher'
   },
   {
-    id: 5,
+    id: 6,
     name: 'Елена Волкова',
     email: 'elena.volkova@sml.ru',
     avatar: {
       src: 'https://i.pravatar.cc/128?u=elena'
     },
     status: 'subscribed',
-    location: 'Казань, Россия'
+    role: 'teacher'
   },
   {
-    id: 6,
+    id: 7,
     name: 'Дмитрий Соколов',
     email: 'dmitry.sokolov@sml.ru',
     avatar: {
       src: 'https://i.pravatar.cc/128?u=dmitry'
     },
     status: 'bounced',
-    location: 'Нижний Новгород, Россия'
+    role: 'teacher'
   },
   {
-    id: 7,
+    id: 8,
     name: 'Анна Морозова',
     email: 'anna.morozova@sml.ru',
     avatar: {
       src: 'https://i.pravatar.cc/128?u=anna'
     },
     status: 'subscribed',
-    location: 'Самара, Россия'
+    role: 'admin'
   },
   {
-    id: 8,
+    id: 9,
     name: 'Сергей Новиков',
     email: 'sergey.novikov@sml.ru',
     avatar: {
       src: 'https://i.pravatar.cc/128?u=sergey'
     },
     status: 'subscribed',
-    location: 'Омск, Россия'
+    role: 'teacher'
   }
 ]
 
@@ -218,9 +228,22 @@ const columns: TableColumn<User>[] = [
     }
   },
   {
-    accessorKey: 'location',
-    header: 'Местоположение',
-    cell: ({ row }) => row.original.location
+    accessorKey: 'role',
+    header: 'Роль',
+    cell: ({ row }) => {
+      const roleMap = {
+        root: { color: 'warning' as const, label: 'Root' },
+        admin: { color: 'error' as const, label: 'Администратор' },
+        teacher: { color: 'primary' as const, label: 'Преподаватель' }
+      }
+      const role = roleMap[row.original.role as keyof typeof roleMap] || { color: 'neutral' as const, label: 'Не указана' }
+
+      return h(UBadge, { 
+        class: 'capitalize', 
+        variant: 'subtle', 
+        color: role.color 
+      }, () => role.label)
+    }
   },
   {
     accessorKey: 'status',
@@ -273,13 +296,13 @@ const statusFilter = ref('all')
 watch(() => statusFilter.value, (newVal) => {
   if (!table?.value?.tableApi) return
 
-  const statusColumn = table.value.tableApi.getColumn('status')
-  if (!statusColumn) return
+  const roleColumn = table.value.tableApi.getColumn('role')
+  if (!roleColumn) return
 
   if (newVal === 'all') {
-    statusColumn.setFilterValue(undefined)
+    roleColumn.setFilterValue(undefined)
   } else {
-    statusColumn.setFilterValue(newVal)
+    roleColumn.setFilterValue(newVal)
   }
 })
 
@@ -339,12 +362,12 @@ const pagination = ref({
             v-model="statusFilter"
             :items="[
               { label: 'Все', value: 'all' },
-              { label: 'Активные', value: 'subscribed' },
-              { label: 'Неактивные', value: 'unsubscribed' },
-              { label: 'Заблокированные', value: 'bounced' }
+              { label: 'Root', value: 'root' },
+              { label: 'Администраторы', value: 'admin' },
+              { label: 'Преподаватели', value: 'teacher' }
             ]"
             :ui="{ trailingIcon: 'group-data-[state=open]:rotate-180 transition-transform duration-200' }"
-            placeholder="Фильтр по статусу"
+            placeholder="Фильтр по роли"
             class="min-w-28"
           />
           <UDropdownMenu

@@ -22,20 +22,6 @@ const links = [[{
     open.value = false
   }
 }, {
-  label: 'Пользователи',
-  icon: 'i-lucide-user-check',
-  to: '/users',
-  onSelect: () => {
-    open.value = false
-  }
-}, {
-  label: 'Группы',
-  icon: 'i-lucide-users',
-  to: '/groups',
-  onSelect: () => {
-    open.value = false
-  }
-}, {
   label: 'Лаборатории',
   icon: 'i-lucide-flask-conical',
   to: '/laboratories',
@@ -56,6 +42,31 @@ const links = [[{
   onSelect: () => {
     open.value = false
   }
+}, {
+  label: 'Разрешения',
+  to: '/permissions',
+  icon: 'i-lucide-shield',
+  defaultOpen: false,
+  type: 'trigger',
+  children: [{
+    label: 'Роли',
+    to: '/roles',
+    onSelect: () => {
+      open.value = false
+    }
+  }, {
+    label: 'Пользователи',
+    to: '/users',
+    onSelect: () => {
+      open.value = false
+    }
+  }, {
+    label: 'Группы',
+    to: '/groups',
+    onSelect: () => {
+      open.value = false
+    }
+  }]
 }, {
   label: 'Настройки',
   to: '/settings',

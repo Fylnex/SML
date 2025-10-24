@@ -49,9 +49,14 @@ export interface User {
   id: number
   name: string
   email: string
+  login: string
   avatar?: AvatarProps
   status: UserStatus
   role: UserRole
+  group: string
+  enabled: boolean
+  startDate: string | null
+  endDate: string | null
 }
 
 export interface Mail {

@@ -21,7 +21,16 @@ const links = [[{
   onSelect: () => {
     open.value = false
   }
-}, {
+}, 
+{
+  label: 'Группы',
+  icon: 'i-lucide-users',
+  to: '/groups',
+  onSelect: () => {
+    open.value = false
+  }
+},
+{
   label: 'Лаборатории',
   icon: 'i-lucide-flask-conical',
   to: '/laboratories',
@@ -49,20 +58,20 @@ const links = [[{
   defaultOpen: false,
   type: 'trigger',
   children: [{
-    label: 'Роли',
-    to: '/roles',
-    onSelect: () => {
-      open.value = false
-    }
-  }, {
     label: 'Пользователи',
-    to: '/users',
+    to: '/permissions/users',
     onSelect: () => {
       open.value = false
     }
   }, {
     label: 'Группы',
-    to: '/groups',
+    to: '/permissions/groups',
+    onSelect: () => {
+      open.value = false
+    }
+  }, {
+    label: 'Роли',
+    to: '/permissions/roles',
     onSelect: () => {
       open.value = false
     }
@@ -77,12 +86,6 @@ const links = [[{
     label: 'Общие',
     to: '/settings',
     exact: true,
-    onSelect: () => {
-      open.value = false
-    }
-  }, {
-    label: 'Участники',
-    to: '/settings/members',
     onSelect: () => {
       open.value = false
     }

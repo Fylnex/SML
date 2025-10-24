@@ -1,5 +1,4 @@
 <script setup lang="ts">
-const { isNotificationsSlideoverOpen } = useDashboard()
 
 // Типы для лабораторий
 type LaboratoryStatus = 'active' | 'maintenance' | 'inactive'
@@ -97,32 +96,9 @@ const statusLabels: Record<LaboratoryStatus, string> = {
 <template>
   <UDashboardPanel id="laboratories">
     <template #header>
-      <UDashboardNavbar title="Лаборатории" :ui="{ right: 'gap-3' }">
+      <UDashboardNavbar title="Лаборатории">
         <template #leading>
           <UDashboardSidebarCollapse />
-        </template>
-
-        <template #right>
-          <UTooltip text="Уведомления" :shortcuts="['N']">
-            <UButton
-              color="neutral"
-              variant="ghost"
-              square
-              @click="isNotificationsSlideoverOpen = true"
-            >
-              <UChip color="error" inset>
-                <UIcon name="i-lucide-bell" class="size-5 shrink-0" />
-              </UChip>
-            </UButton>
-          </UTooltip>
-
-          <UButton
-            icon="i-lucide-plus"
-            size="md"
-            class="rounded-full"
-          >
-            Добавить лабораторию
-          </UButton>
         </template>
       </UDashboardNavbar>
     </template>
@@ -309,21 +285,6 @@ const statusLabels: Record<LaboratoryStatus, string> = {
           </UCard>
         </div>
 
-        <!-- Пустое состояние для добавления новой лаборатории -->
-        <UCard class="border-dashed border-2 border-gray-300 dark:border-gray-600 hover:border-primary transition-colors">
-          <div class="text-center py-8">
-            <UIcon name="i-lucide-plus-circle" class="size-12 text-muted mx-auto mb-4" />
-            <h3 class="text-lg font-medium mb-2">Добавить новую лабораторию</h3>
-            <p class="text-muted mb-4">Создайте новую лабораторию для проведения исследований</p>
-            <UButton
-              icon="i-lucide-plus"
-              color="primary"
-              variant="outline"
-            >
-              Создать лабораторию
-            </UButton>
-          </div>
-        </UCard>
       </div>
     </template>
   </UDashboardPanel>

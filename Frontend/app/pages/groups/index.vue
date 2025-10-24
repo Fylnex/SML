@@ -2,7 +2,6 @@
 import type { TableColumn } from '@nuxt/ui'
 import { h } from 'vue'
 
-const { isNotificationsSlideoverOpen } = useDashboard()
 
 const UBadge = resolveComponent('UBadge')
 
@@ -177,33 +176,9 @@ const stats = computed(() => ({
 <template>
   <UDashboardPanel id="customers">
     <template #header>
-      <UDashboardNavbar title="Группы" :ui="{ right: 'gap-3' }">
+      <UDashboardNavbar title="Группы">
         <template #leading>
           <UDashboardSidebarCollapse />
-        </template>
-
-        <template #right>
-          <UTooltip text="Уведомления" :shortcuts="['N']">
-            <UButton
-              color="neutral"
-              variant="ghost"
-              square
-              @click="isNotificationsSlideoverOpen = true"
-            >
-              <UChip color="error" inset>
-                <UIcon name="i-lucide-bell" class="size-5 shrink-0" />
-              </UChip>
-            </UButton>
-          </UTooltip>
-
-          <UButton
-            icon="i-lucide-users-plus"
-            size="md"
-            class="rounded-full"
-            @click="$router.push('/groups/create')"
-          >
-            Добавить группу
-          </UButton>
         </template>
       </UDashboardNavbar>
     </template>

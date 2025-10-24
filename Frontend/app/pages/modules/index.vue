@@ -1,5 +1,4 @@
 <script setup lang="ts">
-const { isNotificationsSlideoverOpen } = useDashboard()
 
 // Моковые данные модулей
 const modules = ref([
@@ -77,56 +76,33 @@ const modules = ref([
   }
 ])
 
-const statusColors = {
+const statusColors: Record<string, 'success' | 'warning' | 'error'> = {
   active: 'success',
   maintenance: 'warning',
   inactive: 'error'
 }
 
-const statusLabels = {
+const statusLabels: Record<string, string> = {
   active: 'Активен',
   maintenance: 'Обслуживание',
   inactive: 'Неактивен'
 }
 
-const categoryColors = {
-  'Безопасность': 'red',
-  'Аналитика': 'blue',
-  'Коммуникации': 'green',
-  'Планирование': 'purple',
-  'Образование': 'orange'
+const categoryColors: Record<string, 'error' | 'info' | 'success' | 'primary' | 'warning'> = {
+  'Безопасность': 'error',
+  'Аналитика': 'info',
+  'Коммуникации': 'success',
+  'Планирование': 'primary',
+  'Образование': 'warning'
 }
 </script>
 
 <template>
   <UDashboardPanel id="modules">
     <template #header>
-      <UDashboardNavbar title="Модули" :ui="{ right: 'gap-3' }">
+      <UDashboardNavbar title="Модули">
         <template #leading>
           <UDashboardSidebarCollapse />
-        </template>
-
-        <template #right>
-          <UTooltip text="Уведомления" :shortcuts="['N']">
-            <UButton
-              color="neutral"
-              variant="ghost"
-              square
-              @click="isNotificationsSlideoverOpen = true"
-            >
-              <UChip color="error" inset>
-                <UIcon name="i-lucide-bell" class="size-5 shrink-0" />
-              </UChip>
-            </UButton>
-          </UTooltip>
-
-          <UButton
-            icon="i-lucide-plus"
-            size="md"
-            class="rounded-full"
-          >
-            Добавить модуль
-          </UButton>
         </template>
       </UDashboardNavbar>
     </template>
@@ -262,21 +238,6 @@ const categoryColors = {
           </UCard>
         </div>
 
-        <!-- Пустое состояние для добавления нового модуля -->
-        <UCard class="border-dashed border-2 border-gray-300 dark:border-gray-600 hover:border-primary transition-colors">
-          <div class="text-center py-8">
-            <UIcon name="i-lucide-plus-circle" class="size-12 text-muted mx-auto mb-4" />
-            <h3 class="text-lg font-medium mb-2">Добавить новый модуль</h3>
-            <p class="text-muted mb-4">Создайте новый модуль для расширения функциональности системы</p>
-            <UButton
-              icon="i-lucide-plus"
-              color="primary"
-              variant="outline"
-            >
-              Создать модуль
-            </UButton>
-          </div>
-        </UCard>
       </div>
     </template>
   </UDashboardPanel>

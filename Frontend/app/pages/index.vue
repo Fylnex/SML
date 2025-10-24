@@ -3,7 +3,6 @@ import { sub } from 'date-fns'
 import type { DropdownMenuItem } from '@nuxt/ui'
 import type { Period, Range } from '~/types'
 
-const { isNotificationsSlideoverOpen } = useDashboard()
 
 const items = [[{
   label: 'Новая лаборатория',
@@ -69,28 +68,9 @@ const resourceUsageData = computed(() => {
 <template>
   <UDashboardPanel id="home">
     <template #header>
-      <UDashboardNavbar title="Панель управления" :ui="{ right: 'gap-3' }">
+      <UDashboardNavbar title="Панель управления">
         <template #leading>
           <UDashboardSidebarCollapse />
-        </template>
-
-        <template #right>
-          <UTooltip text="Уведомления" :shortcuts="['N']">
-            <UButton
-              color="neutral"
-              variant="ghost"
-              square
-              @click="isNotificationsSlideoverOpen = true"
-            >
-              <UChip color="error" inset>
-                <UIcon name="i-lucide-bell" class="size-5 shrink-0" />
-              </UChip>
-            </UButton>
-          </UTooltip>
-
-          <UDropdownMenu :items="items">
-            <UButton icon="i-lucide-plus" size="md" class="rounded-full" />
-          </UDropdownMenu>
         </template>
       </UDashboardNavbar>
 

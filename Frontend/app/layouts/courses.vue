@@ -5,6 +5,7 @@ const route = useRoute()
 const toast = useToast()
 
 const open = ref(false)
+const coursesSidebarOpen = ref(true) // Всегда открыт в layout для курсов
 
 const links = [[{
   label: 'Главная',
@@ -155,6 +156,7 @@ onMounted(async () => {
 
 <template>
   <UDashboardGroup unit="rem">
+    <!-- Основной сайдбар -->
     <UDashboardSidebar
       id="default"
       v-model:open="open"
@@ -192,6 +194,19 @@ onMounted(async () => {
       </template>
     </UDashboardSidebar>
 
+    <!-- Сайдбар курсов -->
+    <UDashboardSidebar
+      id="courses"
+      v-model:open="coursesSidebarOpen"
+      side="right"
+      collapsible
+      resizable
+      class="bg-elevated/25"
+    >
+      <template #default="{ collapsed }">
+        <CoursesSidebar :collapsed="collapsed" />
+      </template>
+    </UDashboardSidebar>
 
     <UDashboardSearch :groups="groups" />
 

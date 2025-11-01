@@ -29,7 +29,13 @@ watch([() => props.period, () => props.range], () => {
   const min = 1000
   const max = 10000
 
-  data.value = dates.map(date => ({ date, amount: Math.floor(Math.random() * (max - min + 1)) + min }))
+  // Используем детерминированные данные для предотвращения проблем с гидратацией
+  const seedValues = [2500, 3200, 1800, 4500, 2800, 3600, 4200, 1900, 3300, 2700, 3800, 2100, 2900, 3500]
+  
+  data.value = dates.map((date, index) => ({ 
+    date, 
+    amount: seedValues[index % seedValues.length] 
+  }))
 }, { immediate: true })
 
 const x = (_: DataRecord, i: number) => i

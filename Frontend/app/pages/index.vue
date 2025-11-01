@@ -30,17 +30,21 @@ const labMetrics = ref({
   resourceUsage: 68.2
 })
 
-// Данные для графиков
+// Данные для графиков - стабильные данные для предотвращения проблем с гидратацией
 const labActivityData = computed(() => {
   const days = []
   const completed = []
   const started = []
   
+  // Используем детерминированные данные вместо Math.random()
+  const seedData = [8, 12, 15, 9, 18, 11, 14, 16, 7, 13, 10, 17, 6, 9]
+  const startedData = [5, 8, 12, 6, 10, 7, 9, 11, 4, 8, 6, 9, 3, 5]
+  
   for (let i = 13; i >= 0; i--) {
     const date = sub(new Date(), { days: i })
     days.push(date.toLocaleDateString('ru-RU', { day: '2-digit', month: '2-digit' }))
-    completed.push(Math.floor(Math.random() * 20) + 5)
-    started.push(Math.floor(Math.random() * 15) + 3)
+    completed.push(seedData[13 - i])
+    started.push(startedData[13 - i])
   }
   
   return { days, completed, started }
@@ -155,21 +159,28 @@ const resourceUsageData = computed(() => {
           <template #header>
             <h3 class="text-lg font-semibold">Активность лабораторий</h3>
           </template>
-          <div class="h-64 flex items-end justify-between gap-2">
-            <div v-for="(day, index) in labActivityData.days" :key="index" class="flex flex-col items-center gap-2 flex-1">
-              <div class="flex flex-col gap-1 w-full">
-                <div 
-                  class="bg-blue-500 rounded-t" 
-                  :style="{ height: `${(labActivityData.completed[index] / 25) * 200}px` }"
-                ></div>
-                <div 
-                  class="bg-green-500 rounded-b" 
-                  :style="{ height: `${(labActivityData.started[index] / 25) * 200}px` }"
-                ></div>
+          <ClientOnly>
+            <div class="h-64 flex items-end justify-between gap-2">
+              <div v-for="(day, index) in labActivityData.days" :key="index" class="flex flex-col items-center gap-2 flex-1">
+                <div class="flex flex-col gap-1 w-full">
+                  <div 
+                    class="bg-blue-500 rounded-t" 
+                    :style="{ height: `${(labActivityData.completed[index] / 25) * 200}px` }"
+                  ></div>
+                  <div 
+                    class="bg-green-500 rounded-b" 
+                    :style="{ height: `${(labActivityData.started[index] / 25) * 200}px` }"
+                  ></div>
+                </div>
+                <span class="text-xs text-gray-500">{{ day }}</span>
               </div>
-              <span class="text-xs text-gray-500">{{ day }}</span>
             </div>
-          </div>
+            <template #fallback>
+              <div class="h-64 flex items-center justify-center">
+                <div class="text-gray-500">Загрузка графика...</div>
+              </div>
+            </template>
+          </ClientOnly>
           <div class="flex justify-center gap-4 mt-4">
             <div class="flex items-center gap-2">
               <div class="w-3 h-3 bg-blue-500 rounded"></div>
@@ -187,36 +198,43 @@ const resourceUsageData = computed(() => {
           <template #header>
             <h3 class="text-lg font-semibold">Производительность студентов</h3>
           </template>
-          <div class="h-64 flex items-center justify-center">
-            <div class="relative w-48 h-48">
-              <svg class="w-full h-full transform -rotate-90" viewBox="0 0 100 100">
-                <circle
-                  cx="50"
-                  cy="50"
-                  r="40"
-                  fill="none"
-                  stroke="#e5e7eb"
-                  stroke-width="8"
-                />
-                <circle
-                  cx="50"
-                  cy="50"
-                  r="40"
-                  fill="none"
-                  :stroke="labPerformanceData[0].color"
-                  stroke-width="8"
-                  :stroke-dasharray="`${labPerformanceData[0].value * 2.51} 251`"
-                  stroke-linecap="round"
-                />
-              </svg>
-              <div class="absolute inset-0 flex items-center justify-center">
-                <div class="text-center">
-                  <div class="text-2xl font-bold text-gray-900 dark:text-white">{{ labPerformanceData[0].value }}%</div>
-                  <div class="text-sm text-gray-500">{{ labPerformanceData[0].name }}</div>
+          <ClientOnly>
+            <div class="h-64 flex items-center justify-center">
+              <div class="relative w-48 h-48">
+                <svg class="w-full h-full transform -rotate-90" viewBox="0 0 100 100">
+                  <circle
+                    cx="50"
+                    cy="50"
+                    r="40"
+                    fill="none"
+                    stroke="#e5e7eb"
+                    stroke-width="8"
+                  />
+                  <circle
+                    cx="50"
+                    cy="50"
+                    r="40"
+                    fill="none"
+                    :stroke="labPerformanceData[0].color"
+                    stroke-width="8"
+                    :stroke-dasharray="`${labPerformanceData[0].value * 2.51} 251`"
+                    stroke-linecap="round"
+                  />
+                </svg>
+                <div class="absolute inset-0 flex items-center justify-center">
+                  <div class="text-center">
+                    <div class="text-2xl font-bold text-gray-900 dark:text-white">{{ labPerformanceData[0].value }}%</div>
+                    <div class="text-sm text-gray-500">{{ labPerformanceData[0].name }}</div>
+                  </div>
                 </div>
               </div>
             </div>
-          </div>
+            <template #fallback>
+              <div class="h-64 flex items-center justify-center">
+                <div class="text-gray-500">Загрузка диаграммы...</div>
+              </div>
+            </template>
+          </ClientOnly>
           <div class="grid grid-cols-2 gap-2 mt-4">
             <div v-for="item in labPerformanceData.slice(1)" :key="item.name" class="flex items-center gap-2">
               <div class="w-3 h-3 rounded" :style="{ backgroundColor: item.color }"></div>

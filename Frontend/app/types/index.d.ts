@@ -105,3 +105,34 @@ export interface Range {
   start: Date
   end: Date
 }
+
+export type LaboratoryStatus = 'active' | 'maintenance' | 'inactive'
+
+export interface Laboratory {
+  id: number
+  name: string
+  description: string
+  status: LaboratoryStatus
+  capacity: number
+  equipment: number
+  location: string
+  supervisor: string
+  lastActivity: string
+  performanceData: number[]
+}
+
+export type CourseStatus = 'active' | 'completed' | 'paused' | 'cancelled'
+
+export interface Course {
+  id: number
+  name: string
+  description: string
+  status: CourseStatus
+  duration: number
+  students: number
+  instructor: string
+  startDate: string
+  endDate: string
+  difficulty: 'beginner' | 'intermediate' | 'advanced'
+  progress: number
+}

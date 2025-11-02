@@ -1,19 +1,27 @@
 <script setup lang="ts">
 import type { NavigationMenuItem } from '@nuxt/ui'
 
+useHead({
+  title: 'Настройки'
+})
+
+definePageMeta({
+  layout: 'control'
+})
+
 const links = [[{
   label: 'Общие',
   icon: 'i-lucide-user',
-  to: '/settings',
+  to: '/control/settings',
   exact: true
 }, {
   label: 'Уведомления',
   icon: 'i-lucide-bell',
-  to: '/settings/notifications'
+  to: '/control/settings/notifications'
 }, {
   label: 'Безопасность',
   icon: 'i-lucide-shield',
-  to: '/settings/security'
+  to: '/control/settings/security'
 }], [{
   label: 'Документация',
   icon: 'i-lucide-book-open',

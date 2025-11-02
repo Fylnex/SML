@@ -403,7 +403,7 @@ definePageMeta({
           </p>
           <UButton
             color="primary"
-            @click="$router.push('/laboratories')"
+            @click="$router.push('/control/laboratories')"
           >
             Вернуться к списку
           </UButton>

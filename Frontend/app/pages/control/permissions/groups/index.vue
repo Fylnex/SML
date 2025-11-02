@@ -2,6 +2,13 @@
 import type { TableColumn } from '@nuxt/ui'
 import { h } from 'vue'
 
+useHead({
+  title: 'Группы разрешений'
+})
+
+definePageMeta({
+  layout: 'control'
+})
 
 const UBadge = resolveComponent('UBadge')
 

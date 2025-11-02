@@ -1,4 +1,11 @@
 <script setup lang="ts">
+useHead({
+  title: 'Модули'
+})
+
+definePageMeta({
+  layout: 'control'
+})
 
 // Моковые данные модулей
 const modules = ref([

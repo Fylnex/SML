@@ -18,6 +18,7 @@
     "@unovis/vue": "^1.6.1",
     "@vueuse/nuxt": "^13.9.0",
     "date-fns": "^4.1.0",
+    "gsap": "^3.13.0",
     "nuxt": "^4.2.0",
     "transliteration": "^2.3.5",
     "zod": "^4.1.11"

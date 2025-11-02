@@ -3,6 +3,14 @@ import { computed, ref, watch } from 'vue'
 import { breakpointsTailwind } from '@vueuse/core'
 import type { Mail } from '~/types'
 
+useHead({
+  title: 'Входящие'
+})
+
+definePageMeta({
+  layout: 'control'
+})
+
 const tabItems = [{
   label: 'All',
   value: 'all'

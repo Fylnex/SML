@@ -1,16 +1,26 @@
 <script setup lang="ts">
+import type { NavigationMenuItem } from '@nuxt/ui'
+
+useHead({
+  title: 'Разрешения'
+})
+
+definePageMeta({
+  layout: 'control'
+})
+
 const links = [[{
   label: 'Роли',
   icon: 'i-lucide-shield',
-  to: '/roles'
+  to: '/control/permissions/roles'
 }, {
   label: 'Пользователи',
   icon: 'i-lucide-user-check',
-  to: '/users'
+  to: '/control/permissions/users'
 }, {
   label: 'Группы',
   icon: 'i-lucide-users',
-  to: '/groups'
+  to: '/control/permissions/groups'
 }]] satisfies NavigationMenuItem[][]
 </script>
 

@@ -5,7 +5,6 @@ const route = useRoute()
 const toast = useToast()
 
 const open = ref(false)
-const coursesSidebarOpen = ref(true) // Всегда открыт в layout для курсов
 
 const links = [[{
   label: 'Главная',
@@ -123,7 +122,7 @@ const groups = computed(() => [{
     id: 'source',
     label: 'Просмотр исходного кода страницы',
     icon: 'i-simple-icons-github',
-    to: `https://github.com/nuxt-ui-templates/dashboard/blob/main/app/pages${route.path === '/' ? '/index' : route.path}.vue`,
+    to: `https://github.com/nuxt-ui-templates/dashboard/blob/main/app/pages${route.path === '/control' ? '/control/index' : route.path}.vue`,
     target: '_blank'
   }]
 }])
@@ -156,7 +155,6 @@ onMounted(async () => {
 
 <template>
   <UDashboardGroup unit="rem">
-    <!-- Основной сайдбар -->
     <UDashboardSidebar
       id="default"
       v-model:open="open"
@@ -194,19 +192,6 @@ onMounted(async () => {
       </template>
     </UDashboardSidebar>
 
-    <!-- Сайдбар курсов -->
-    <UDashboardSidebar
-      id="courses"
-      v-model:open="coursesSidebarOpen"
-      side="right"
-      collapsible
-      resizable
-      class="bg-elevated/25"
-    >
-      <template #default="{ collapsed }">
-        <CoursesSidebar :collapsed="collapsed" />
-      </template>
-    </UDashboardSidebar>
 
     <UDashboardSearch :groups="groups" />
 

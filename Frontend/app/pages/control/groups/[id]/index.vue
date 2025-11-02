@@ -321,7 +321,7 @@ const toast = useToast()
                   variant="outline"
                   color="primary"
                   block
-                  @click="$router.push(`/groups/${group.id}/students`)"
+                  @click="$router.push(`/control/groups/${group.id}/students`)"
                 >
                   Список студентов
                 </UButton>

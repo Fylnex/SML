@@ -2,6 +2,13 @@
 import type { TableColumn } from '@nuxt/ui'
 import { h } from 'vue'
 
+useHead({
+  title: 'Группы'
+})
+
+definePageMeta({
+  layout: 'control'
+})
 
 const UBadge = resolveComponent('UBadge')
 
@@ -309,7 +316,7 @@ const stats = computed(() => ({
               v-for="(group, groupIndex) in filteredGroups.slice(rowIndex * 11, (rowIndex + 1) * 11)"
               :key="group.id"
               class="hover:shadow-md transition-shadow cursor-pointer border-2 hover:border-primary"
-              @click="$router.push(`/groups/${group.id}`)"
+              @click="$router.push(`/control/groups/${group.id}`)"
             >
               <div class="p-4 text-center min-h-[80px] flex items-center justify-center">
                 <h3 class="text-sm font-medium leading-tight break-words">
@@ -396,7 +403,7 @@ const stats = computed(() => ({
                      size="sm"
                      variant="ghost"
                      color="primary"
-                     @click="$router.push(`/groups/${group.id}`)"
+                     @click="$router.push(`/control/groups/${group.id}`)"
                    >
                      Просмотр
                    </UButton>
@@ -413,7 +420,7 @@ const stats = computed(() => ({
                      size="sm"
                      variant="ghost"
                      color="info"
-                     @click="$router.push(`/groups/${group.id}/students`)"
+                     @click="$router.push(`/control/groups/${group.id}/students`)"
                    >
                      Студенты
                    </UButton>

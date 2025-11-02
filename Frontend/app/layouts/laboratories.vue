@@ -10,14 +10,14 @@ const labsSidebarOpen = ref(true) // Всегда открыт в layout для 
 const links = [[{
   label: 'Главная',
   icon: 'i-lucide-house',
-  to: '/',
+  to: '/control',
   onSelect: () => {
     open.value = false
   }
 }, {
   label: 'Входящие',
   icon: 'i-lucide-inbox',
-  to: '/inbox',
+  to: '/control/inbox',
   badge: '4',
   onSelect: () => {
     open.value = false
@@ -26,7 +26,7 @@ const links = [[{
 {
   label: 'Группы',
   icon: 'i-lucide-users',
-  to: '/groups',
+  to: '/control/groups',
   onSelect: () => {
     open.value = false
   }
@@ -34,71 +34,71 @@ const links = [[{
 {
   label: 'Лаборатории',
   icon: 'i-lucide-flask-conical',
-  to: '/laboratories',
+  to: '/control/laboratories',
   onSelect: () => {
     open.value = false
   }
 }, {
   label: 'Курсы',
   icon: 'i-lucide-book-open',
-  to: '/courses',
+  to: '/control/courses',
   onSelect: () => {
     open.value = false
   }
 }, {
   label: 'Модули',
   icon: 'i-lucide-puzzle',
-  to: '/modules',
+  to: '/control/modules',
   onSelect: () => {
     open.value = false
   }
 }, {
   label: 'Разрешения',
-  to: '/permissions',
+  to: '/control/permissions',
   icon: 'i-lucide-shield',
   defaultOpen: false,
   type: 'trigger',
   children: [{
     label: 'Пользователи',
-    to: '/permissions/users',
+    to: '/control/permissions/users',
     onSelect: () => {
       open.value = false
     }
   }, {
     label: 'Группы',
-    to: '/permissions/groups',
+    to: '/control/permissions/groups',
     onSelect: () => {
       open.value = false
     }
   }, {
     label: 'Роли',
-    to: '/permissions/roles',
+    to: '/control/permissions/roles',
     onSelect: () => {
       open.value = false
     }
   }]
 }, {
   label: 'Настройки',
-  to: '/settings',
+  to: '/control/settings',
   icon: 'i-lucide-settings',
   defaultOpen: false,
   type: 'trigger',
   children: [{
     label: 'Общие',
-    to: '/settings',
+    to: '/control/settings',
     exact: true,
     onSelect: () => {
       open.value = false
     }
   }, {
     label: 'Уведомления',
-    to: '/settings/notifications',
+    to: '/control/settings/notifications',
     onSelect: () => {
       open.value = false
     }
   }, {
     label: 'Безопасность',
-    to: '/settings/security',
+    to: '/control/settings/security',
     onSelect: () => {
       open.value = false
     }
@@ -106,7 +106,7 @@ const links = [[{
 }], [{
   label: 'Помощь и поддержка',
   icon: 'i-lucide-info',
-  to: '/help',
+  to: '/control/help',
   onSelect: () => {
     open.value = false
   }

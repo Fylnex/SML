@@ -1,6 +1,14 @@
 <script setup lang="ts">
 import type { Permission, PermissionLevel } from '~/types'
 
+useHead({
+  title: 'Роли'
+})
+
+definePageMeta({
+  layout: 'control'
+})
+
 const { data: roles, pending } = await useFetch('/api/roles')
 
 // Используем данные из API, исключая роль root

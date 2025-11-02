@@ -176,7 +176,7 @@ const resetForm = () => {
             icon="i-lucide-x"
             variant="ghost"
             color="neutral"
-            @click="$router.push('/groups')"
+            @click="$router.push('/control/groups')"
           >
             Отмена
           </UButton>

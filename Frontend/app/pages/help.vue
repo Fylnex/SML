@@ -1,5 +1,11 @@
 <script setup lang="ts">
-const { isNotificationsSlideoverOpen } = useDashboard()
+useHead({
+  title: 'Помощь и поддержка'
+})
+
+definePageMeta({
+  layout: 'default'
+})
 
 const faqItems = [
   {
@@ -27,32 +33,8 @@ const faqItems = [
 </script>
 
 <template>
-  <UDashboardPanel id="help">
-    <template #header>
-      <UDashboardNavbar title="Помощь и поддержка" :ui="{ right: 'gap-3' }">
-        <template #leading>
-          <UDashboardSidebarCollapse />
-        </template>
-
-        <template #right>
-          <UTooltip text="Уведомления" :shortcuts="['N']">
-            <UButton
-              color="neutral"
-              variant="ghost"
-              square
-              @click="isNotificationsSlideoverOpen = true"
-            >
-              <UChip color="error" inset>
-                <UIcon name="i-lucide-bell" class="size-5 shrink-0" />
-              </UChip>
-            </UButton>
-          </UTooltip>
-        </template>
-      </UDashboardNavbar>
-    </template>
-
-    <template #body>
-      <div class="max-w-4xl mx-auto space-y-8">
+  <div class="container mx-auto px-4 sm:px-6 lg:px-8 py-12">
+    <div class="max-w-4xl mx-auto space-y-8">
         <!-- Заголовок -->
         <div class="text-center">
           <h1 class="text-3xl font-bold text-gray-900 dark:text-white mb-4">
@@ -198,7 +180,6 @@ const faqItems = [
             </div>
           </div>
         </UCard>
-      </div>
-    </template>
-  </UDashboardPanel>
+    </div>
+  </div>
 </template>

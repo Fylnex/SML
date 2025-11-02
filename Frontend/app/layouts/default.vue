@@ -1,5 +1,8 @@
 <script setup lang="ts">
 import type { StaggeredMenuItem, StaggeredMenuSocialItem } from '~/components/StaggeredMenu.vue'
+import { computed } from 'vue'
+
+const { isAuthenticated } = useAuth()
 
 const menuItems: StaggeredMenuItem[] = [
   { label: 'Главная', ariaLabel: 'Перейти на главную страницу', link: '/' },
@@ -8,11 +11,19 @@ const menuItems: StaggeredMenuItem[] = [
   { label: 'Панель управления', ariaLabel: 'Перейти в панель управления', link: '/control' }
 ]
 
-const socialItems: StaggeredMenuSocialItem[] = [
-  { label: 'Вход', link: '/login' },
-  { label: 'Настройки', link: '/settings' },
-  { label: 'Профиль', link: '/profile' }
-]
+// Динамические ссылки в зависимости от авторизации
+const socialItems = computed<StaggeredMenuSocialItem[]>(() => {
+  if (isAuthenticated.value) {
+    return [
+      { label: 'Настройки', link: '/settings' },
+      { label: 'Профиль', link: '/profile' }
+    ]
+  } else {
+    return [
+      { label: 'Вход', link: '/login' }
+    ]
+  }
+})
 
 const handleMenuOpen = () => console.log('Menu opened')
 const handleMenuClose = () => console.log('Menu closed')
@@ -22,21 +33,23 @@ const handleMenuClose = () => console.log('Menu closed')
   <div class="min-h-screen flex flex-col relative">
     <!-- Staggered Menu -->
     <div class="fixed inset-0 z-50">
-      <StaggeredMenu
-        position="right"
-        :items="menuItems"
-        :social-items="socialItems"
-        :display-socials="true"
-        :display-item-numbering="true"
-        menu-button-color="#fff"
-        open-menu-button-color="#000"
-        :change-menu-color-on-open="true"
-        :colors="['#9EF2B2', '#27FF64']"
-        logo-url="/favicon.ico"
-        accent-color="#27FF64"
-        @menu-open="handleMenuOpen"
-        @menu-close="handleMenuClose"
-      />
+      <ClientOnly>
+        <StaggeredMenu
+          position="right"
+          :items="menuItems"
+          :social-items="socialItems"
+          :display-socials="true"
+          :display-item-numbering="true"
+          menu-button-color="#fff"
+          open-menu-button-color="#000"
+          :change-menu-color-on-open="true"
+          :colors="['#9EF2B2', '#27FF64']"
+          logo-url="/favicon.ico"
+          accent-color="#27FF64"
+          :on-menu-open="handleMenuOpen"
+          :on-menu-close="handleMenuClose"
+        />
+      </ClientOnly>
     </div>
 
     <!-- Main content -->

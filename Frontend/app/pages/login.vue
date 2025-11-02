@@ -5,6 +5,7 @@ definePageMeta({
 
 const toast = useToast()
 const router = useRouter()
+const { login } = useAuth()
 
 // Состояние формы
 const isLoading = ref(false)
@@ -19,23 +20,33 @@ const form = ref({
 const loginError = ref('')
 const passwordError = ref('')
 
+// Этапы входа
+const loginStep = ref<'login' | 'password'>('login')
+
 // Обработка отправки формы
 const handleSubmit = async () => {
   // Сброс ошибок
   loginError.value = ''
   passwordError.value = ''
 
-  // Валидация
-  if (!form.value.login) {
-    loginError.value = 'Логин обязателен'
+  // Этап 1: Ввод логина
+  if (loginStep.value === 'login') {
+    if (!form.value.login) {
+      loginError.value = 'Логин обязателен'
+      return
+    }
+    
+    if (form.value.login.length < 3) {
+      loginError.value = 'Логин должен содержать минимум 3 символа'
+      return
+    }
+
+    // Переход к этапу ввода пароля
+    loginStep.value = 'password'
     return
   }
-  
-  if (form.value.login.length < 3) {
-    loginError.value = 'Логин должен содержать минимум 3 символа'
-    return
-  }
-  
+
+  // Этап 2: Ввод пароля
   if (!form.value.password) {
     passwordError.value = 'Пароль обязателен'
     return
@@ -54,6 +65,12 @@ const handleSubmit = async () => {
     
     // Проверка демо-данных
     if (form.value.login === 'admin' && form.value.password === 'admin123') {
+      // Генерируем токен (в реальном приложении получаем с сервера)
+      const token = `demo-token-${Date.now()}`
+      
+      // Сохраняем авторизацию
+      login(token)
+      
       toast.add({
         title: 'Успешный вход',
         description: 'Добро пожаловать в систему!',
@@ -68,6 +85,9 @@ const handleSubmit = async () => {
         description: 'Неверный логин или пароль',
         color: 'error'
       })
+      // Сбрасываем только пароль, логин сохраняется
+      form.value.password = ''
+      passwordError.value = 'Неверный пароль'
     }
   } catch (error) {
     toast.add({
@@ -78,6 +98,13 @@ const handleSubmit = async () => {
   } finally {
     isLoading.value = false
   }
+}
+
+// Возврат к вводу логина
+const backToLogin = () => {
+  loginStep.value = 'login'
+  form.value.password = ''
+  passwordError.value = ''
 }
 
 // Обработка Enter в полях
@@ -96,24 +123,13 @@ const togglePasswordVisibility = () => {
 
 <template>
   <div>
-    <div class="mb-6">
-      <h3 class="text-lg font-medium text-gray-900 dark:text-white text-center">
-        Вход в систему
-      </h3>
-      <p class="mt-2 text-sm text-gray-600 dark:text-gray-400 text-center">
-        Введите свои учетные данные для входа
-      </p>
-    </div>
-
     <UForm @submit="handleSubmit" class="space-y-6">
       <!-- Логин поле -->
-      <div>
-        <UFormGroup
-          label="Логин"
-          name="login"
-          :error="loginError"
-          required
-        >
+      <div v-show="loginStep === 'login'">
+        <div class="space-y-2">
+          <label class="block text-sm font-medium text-gray-700 dark:text-gray-300">
+            Логин <span class="text-red-500">*</span>
+          </label>
           <UInput
             v-model="form.login"
             type="text"
@@ -124,24 +140,50 @@ const togglePasswordVisibility = () => {
             size="lg"
             class="w-full"
           />
-        </UFormGroup>
+          <div v-if="loginError" class="text-sm text-red-500">
+            {{ loginError }}
+          </div>
+        </div>
       </div>
 
       <!-- Пароль поле -->
-      <div>
-        <UFormGroup
-          label="Пароль"
-          name="password"
-          :error="passwordError"
-          required
-        >
+      <div v-show="loginStep === 'password'">
+        <!-- Отображение логина -->
+        <div class="mb-4">
+          <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+            Логин
+          </label>
+          <UInput
+            :model-value="form.login"
+            type="text"
+            readonly
+            disabled
+            size="lg"
+            class="w-full opacity-100"
+          />
+        </div>
+        
+        <div class="space-y-2">
+          <div class="flex items-center justify-between">
+            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300">
+              Пароль
+            </label>
+            <UButton
+              variant="link"
+              color="neutral"
+              size="sm"
+              :disabled="isLoading"
+              class="text-xs p-0 h-auto min-h-0"
+            >
+              Забыли пароль?
+            </UButton>
+          </div>
+          
           <UInput
             v-model="form.password"
             :type="showPassword ? 'text' : 'password'"
-            placeholder="Введите ваш пароль"
-            icon="i-lucide-lock"
+            placeholder="Ваш пароль"
             :disabled="isLoading"
-            @keydown="handleKeydown"
             size="lg"
             class="w-full"
           >
@@ -157,40 +199,51 @@ const togglePasswordVisibility = () => {
               />
             </template>
           </UInput>
-        </UFormGroup>
-      </div>
-
-      <!-- Запомнить меня -->
-      <div class="flex items-center justify-between">
-        <UCheckbox
-          v-model="rememberMe"
-          label="Запомнить меня"
-          :disabled="isLoading"
-        />
-        
-        <UButton
-          variant="link"
-          color="primary"
-          size="sm"
-          :disabled="isLoading"
-        >
-          Забыли пароль?
-        </UButton>
+          <div v-if="passwordError" class="text-sm text-red-500">
+            {{ passwordError }}
+          </div>
+        </div>
       </div>
 
       <!-- Кнопка входа -->
       <div>
         <UButton
+          v-if="loginStep === 'login'"
           type="submit"
           block
           size="lg"
           :loading="isLoading"
           :disabled="isLoading"
-          icon="i-lucide-log-in"
           class="w-full"
         >
-          {{ isLoading ? 'Вход...' : 'Войти в систему' }}
+          Продолжить
         </UButton>
+        <div v-else class="space-y-3">
+          <UButton
+            type="submit"
+            block
+            size="lg"
+            :loading="isLoading"
+            :disabled="isLoading"
+            class="w-full"
+          >
+            {{ isLoading ? 'Вход...' : 'Войти' }}
+          </UButton>
+          <div class="flex justify-center">
+            <UButton
+              variant="ghost"
+              size="sm"
+              :disabled="isLoading"
+              @click="backToLogin"
+              class="text-xs"
+            >
+              <template #leading>
+                <UIcon name="i-lucide-chevron-left" class="size-4" />
+              </template>
+              Назад
+            </UButton>
+          </div>
+        </div>
       </div>
 
     </UForm>

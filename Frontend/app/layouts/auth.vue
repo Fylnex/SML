@@ -33,30 +33,29 @@ useSeoMeta({
 
 <template>
   <UApp>
-    <div class="min-h-screen bg-gray-50 dark:bg-gray-900 flex flex-col justify-center py-12 sm:px-6 lg:px-8">
-      <div class="sm:mx-auto sm:w-full sm:max-w-md">
-        <div class="flex justify-center">
-          <div class="flex items-center space-x-2">
-            <UIcon name="i-lucide-shield-check" class="size-8 text-primary" />
-            <h1 class="text-2xl font-bold text-gray-900 dark:text-white">SML</h1>
+    <div class="min-h-screen bg-gray-50 dark:bg-gray-900 flex flex-col py-12 sm:px-6 lg:px-8">
+      <div class="flex-1 flex items-center justify-center">
+        <div class="sm:mx-auto sm:w-full sm:max-w-md w-full">
+          <div class="bg-white dark:bg-gray-800 py-8 px-4 shadow-xl sm:rounded-lg sm:px-10">
+            <!-- Логотип -->
+            <div class="flex justify-center mb-8">
+              <img src="/logo.png" alt="SML Logo" class="size-16" />
+            </div>
+
+            <!-- Форма -->
+            <slot />
           </div>
         </div>
-
-        <p class="mt-2 text-center text-sm text-gray-600 dark:text-gray-400">
-          Система управления лабораторией
-        </p>
       </div>
 
-      <div class="mt-8 sm:mx-auto sm:w-full sm:max-w-md">
-        <div class="bg-white dark:bg-gray-800 py-8 px-4 shadow-xl sm:rounded-lg sm:px-10">
-          <slot />
-        </div>
-      </div>
-
-      <div class="mt-8 text-center">
-        <p class="text-xs text-gray-500 dark:text-gray-400">
-          © 2024 System Management Laboratory. Все права защищены.
-        </p>
+      <!-- Футер -->
+      <div class="flex flex-col items-center gap-2 mt-8">
+        <UButton variant="link" color="neutral" size="sm" class="text-xs">
+          Условия использования
+        </UButton>
+        <UButton variant="link" color="neutral" size="sm" class="text-xs">
+          Политика конфиденциальности
+        </UButton>
       </div>
     </div>
   </UApp>

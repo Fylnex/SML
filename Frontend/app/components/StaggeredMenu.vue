@@ -92,7 +92,7 @@
               class="relative overflow-hidden leading-none sm-panel-itemWrap"
             >
               <a
-                class="inline-block relative pr-[1.4em] font-semibold text-[3rem] text-black no-underline uppercase leading-none tracking-[-2px] transition-[background,color] duration-150 ease-linear cursor-pointer sm-panel-item"
+                class="inline-block relative pr-[1.4em] font-semibold text-[2.5rem] text-black no-underline uppercase leading-none tracking-[-2px] transition-[background,color] duration-150 ease-linear cursor-pointer sm-panel-item"
                 :href="item.link"
                 :aria-label="item.ariaLabel"
                 :data-index="idx + 1"
@@ -104,7 +104,7 @@
             </li>
             <li v-else class="relative overflow-hidden leading-none sm-panel-itemWrap" aria-hidden="true">
               <span
-                class="inline-block relative pr-[1.4em] font-semibold text-[3rem] text-black no-underline uppercase leading-none tracking-[-2px] transition-[background,color] duration-150 ease-linear cursor-pointer sm-panel-item"
+                class="inline-block relative pr-[1.4em] font-semibold text-[2.5rem] text-black no-underline uppercase leading-none tracking-[-2px] transition-[background,color] duration-150 ease-linear cursor-pointer sm-panel-item"
               >
                 <span class="inline-block will-change-transform sm-panel-itemLabel [transform-origin:50%_100%]">
                   No items
@@ -119,16 +119,43 @@
             aria-label="Social links"
           >
             <h3 class="m-0 font-medium text-base sm-socials-title [color:var(--sm-accent,#ff0000)]">Инструменты</h3>
-            <ul class="flex flex-row flex-wrap items-center gap-4 m-0 p-0 list-none sm-socials-list" role="list">
-              <li v-for="(social, i) in socialItems" :key="social.label + i" class="sm-socials-item">
-                <a
-                  :href="social.link"
-                  class="inline-block relative py-[2px] font-medium text-[#111] text-[1.2rem] no-underline transition-[color,opacity] duration-300 ease-linear sm-socials-link"
+            
+            <div class="flex flex-row flex-wrap items-center gap-4">
+              <ul class="flex flex-row flex-wrap items-center gap-4 m-0 p-0 list-none sm-socials-list" role="list">
+                <li v-for="(social, i) in socialItems" :key="social.label + i" class="sm-socials-item">
+                  <a
+                    :href="social.link"
+                    class="inline-block relative py-[2px] font-medium text-[#111] text-[0.95rem] no-underline transition-[color,opacity] duration-300 ease-linear sm-socials-link"
+                  >
+                    {{ social.label }}
+                  </a>
+                </li>
+              </ul>
+
+              <div
+                ref="themeSwitcherRef"
+                class="flex items-center gap-2 sm-theme-switcher-inline"
+                role="radiogroup"
+                aria-label="Выбор темы"
+              >
+                <button
+                  v-for="theme in themes"
+                  :key="theme.value"
+                  @click="setTheme(theme.value)"
+                  :class="[
+                    'sm-theme-btn-inline',
+                    currentTheme === theme.value && 'sm-theme-btn-inline-active'
+                  ]"
+                  :aria-label="theme.label"
+                  :aria-checked="currentTheme === theme.value"
+                  role="radio"
+                  type="button"
+                  :title="theme.label"
                 >
-                  {{ social.label }}
-                </a>
-              </li>
-            </ul>
+                  <component :is="theme.icon" />
+                </button>
+              </div>
+            </div>
           </div>
         </div>
       </aside>
@@ -137,7 +164,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed, nextTick, onBeforeUnmount, onMounted, ref, useTemplateRef, watch } from 'vue'
+import { computed, nextTick, onBeforeUnmount, onMounted, ref, useTemplateRef, watch, h } from 'vue'
 import gsap from 'gsap'
 
 export interface StaggeredMenuItem {
@@ -168,6 +195,61 @@ export interface StaggeredMenuProps {
   onMenuClose?: () => void
 }
 
+type ThemeMode = 'system' | 'light' | 'dark'
+
+// Иконки для тем
+const SystemIcon = () => h('svg', {
+  xmlns: 'http://www.w3.org/2000/svg',
+  width: '16',
+  height: '16',
+  viewBox: '0 0 24 24',
+  fill: 'none',
+  stroke: 'currentColor',
+  'stroke-width': '2',
+  'stroke-linecap': 'round',
+  'stroke-linejoin': 'round'
+}, [
+  h('rect', { x: '2', y: '3', width: '20', height: '14', rx: '2' }),
+  h('path', { d: 'M8 21h8' }),
+  h('path', { d: 'M12 17v4' })
+])
+
+const LightIcon = () => h('svg', {
+  xmlns: 'http://www.w3.org/2000/svg',
+  width: '16',
+  height: '16',
+  viewBox: '0 0 24 24',
+  fill: 'none',
+  stroke: 'currentColor',
+  'stroke-width': '2',
+  'stroke-linecap': 'round',
+  'stroke-linejoin': 'round'
+}, [
+  h('circle', { cx: '12', cy: '12', r: '4' }),
+  h('path', { d: 'M12 2v2' }),
+  h('path', { d: 'M12 20v2' }),
+  h('path', { d: 'm4.93 4.93 1.41 1.41' }),
+  h('path', { d: 'm17.66 17.66 1.41 1.41' }),
+  h('path', { d: 'M2 12h2' }),
+  h('path', { d: 'M20 12h2' }),
+  h('path', { d: 'm6.34 17.66-1.41 1.41' }),
+  h('path', { d: 'm19.07 4.93-1.41 1.41' })
+])
+
+const DarkIcon = () => h('svg', {
+  xmlns: 'http://www.w3.org/2000/svg',
+  width: '16',
+  height: '16',
+  viewBox: '0 0 24 24',
+  fill: 'none',
+  stroke: 'currentColor',
+  'stroke-width': '2',
+  'stroke-linecap': 'round',
+  'stroke-linejoin': 'round'
+}, [
+  h('path', { d: 'M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z' })
+])
+
 const props = withDefaults(defineProps<StaggeredMenuProps>(), {
   position: 'right',
   colors: () => ['#9EF2B2', '#27FF64'],
@@ -181,6 +263,49 @@ const props = withDefaults(defineProps<StaggeredMenuProps>(), {
   changeMenuColorOnOpen: true,
   accentColor: '#27FF64'
 })
+
+// Темы
+const themes = [
+  { value: 'system' as ThemeMode, label: 'Системная тема', icon: SystemIcon },
+  { value: 'light' as ThemeMode, label: 'Светлая тема', icon: LightIcon },
+  { value: 'dark' as ThemeMode, label: 'Темная тема', icon: DarkIcon }
+]
+
+const currentTheme = ref<ThemeMode>('system')
+
+// Функция для применения темы
+const applyTheme = (theme: ThemeMode) => {
+  const root = document.documentElement
+  
+  if (theme === 'system') {
+    const systemPreference = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'
+    root.classList.remove('light', 'dark')
+    root.classList.add(systemPreference)
+    localStorage.removeItem('theme')
+  } else {
+    root.classList.remove('light', 'dark')
+    root.classList.add(theme)
+    localStorage.setItem('theme', theme)
+  }
+}
+
+// Функция для установки темы
+const setTheme = (theme: ThemeMode) => {
+  currentTheme.value = theme
+  applyTheme(theme)
+}
+
+// Загрузка сохраненной темы при монтировании
+const loadSavedTheme = () => {
+  const savedTheme = localStorage.getItem('theme') as ThemeMode | null
+  if (savedTheme && (savedTheme === 'light' || savedTheme === 'dark')) {
+    currentTheme.value = savedTheme
+    applyTheme(savedTheme)
+  } else {
+    currentTheme.value = 'system'
+    applyTheme('system')
+  }
+}
 
 const open = ref(false)
 const openRef = ref(false)
@@ -197,11 +322,14 @@ const textInnerRef = useTemplateRef('textInnerRef')
 const textWrapRef = useTemplateRef('textWrapRef')
 const textLines = ref<string[]>(['Меню', 'Закрыть'])
 
+const themeSwitcherRef = useTemplateRef('themeSwitcherRef')
+
 const openTlRef = ref<gsap.core.Timeline | null>(null)
 const closeTweenRef = ref<gsap.core.Tween | null>(null)
 const spinTweenRef = ref<gsap.core.Timeline | null>(null)
 const textCycleAnimRef = ref<gsap.core.Tween | null>(null)
 const colorTweenRef = ref<gsap.core.Tween | null>(null)
+const themeAnimRef = ref<gsap.core.Tween | null>(null)
 
 const toggleBtnRef = useTemplateRef('toggleBtnRef')
 const busyRef = ref(false)
@@ -255,6 +383,7 @@ const initializeGSAP = () => {
 const buildOpenTimeline = (): gsap.core.Timeline | null => {
   const panel = panelRef.value
   const layers = preLayerElsRef.value
+  const themeSwitcher = themeSwitcherRef.value
   if (!panel) return null
 
   openTlRef.value?.kill()
@@ -270,6 +399,7 @@ const buildOpenTimeline = (): gsap.core.Timeline | null => {
   ) as HTMLElement[]
   const socialTitle = panel.querySelector('.sm-socials-title') as HTMLElement | null
   const socialLinks = Array.from(panel.querySelectorAll('.sm-socials-link')) as HTMLElement[]
+  const themeButtons = themeSwitcher ? Array.from(themeSwitcher.querySelectorAll('.sm-theme-btn-inline')) as HTMLElement[] : []
 
   const layerStates = layers.map((el: HTMLElement) => ({ el, start: Number(gsap.getProperty(el, 'xPercent')) }))
   const panelStart = Number(gsap.getProperty(panel, 'xPercent'))
@@ -278,6 +408,7 @@ const buildOpenTimeline = (): gsap.core.Timeline | null => {
   if (numberEls.length) gsap.set(numberEls, { ['--sm-num-opacity' as keyof Record<string, number>]: 0 })
   if (socialTitle) gsap.set(socialTitle, { opacity: 0 })
   if (socialLinks.length) gsap.set(socialLinks, { y: 25, opacity: 0 })
+  if (themeButtons.length) gsap.set(themeButtons, { scale: 0, opacity: 0 })
 
   const tl = gsap.timeline({ paused: true })
 
@@ -320,10 +451,11 @@ const buildOpenTimeline = (): gsap.core.Timeline | null => {
     }
   }
 
-  if (socialTitle || socialLinks.length) {
+  if (socialTitle || socialLinks.length || themeButtons.length) {
     const socialsStart = panelInsertTime + panelDuration * 0.4
 
     if (socialTitle) tl.to(socialTitle, { opacity: 1, duration: 0.5, ease: 'power2.out' }, socialsStart)
+    
     if (socialLinks.length) {
       tl.to(
         socialLinks,
@@ -338,6 +470,20 @@ const buildOpenTimeline = (): gsap.core.Timeline | null => {
           }
         },
         socialsStart + 0.04
+      )
+    }
+
+    if (themeButtons.length) {
+      tl.to(
+        themeButtons,
+        {
+          scale: 1,
+          opacity: 1,
+          duration: 0.4,
+          ease: 'back.out(1.7)',
+          stagger: { each: 0.05, from: 'start' }
+        },
+        socialsStart + 0.2
       )
     }
   }
@@ -367,6 +513,7 @@ const playClose = () => {
 
   const panel = panelRef.value
   const layers = preLayerElsRef.value
+  const themeSwitcher = themeSwitcherRef.value
   if (!panel) return
 
   const all: HTMLElement[] = [...layers, panel]
@@ -390,8 +537,11 @@ const playClose = () => {
 
       const socialTitle = panel.querySelector('.sm-socials-title') as HTMLElement | null
       const socialLinks = Array.from(panel.querySelectorAll('.sm-socials-link')) as HTMLElement[]
+      const themeButtons = themeSwitcher ? Array.from(themeSwitcher.querySelectorAll('.sm-theme-btn-inline')) as HTMLElement[] : []
+      
       if (socialTitle) gsap.set(socialTitle, { opacity: 0 })
       if (socialLinks.length) gsap.set(socialLinks, { y: 25, opacity: 0 })
+      if (themeButtons.length) gsap.set(themeButtons, { scale: 0, opacity: 0 })
 
       busyRef.value = false
     }
@@ -512,6 +662,7 @@ watch(
 onMounted(() => {
   nextTick(() => {
     initializeGSAP()
+    loadSavedTheme()
   })
 })
 
@@ -522,6 +673,7 @@ onBeforeUnmount(() => {
   textCycleAnimRef.value?.kill()
   colorTweenRef.value?.kill()
   itemEntranceTweenRef.value?.kill()
+  themeAnimRef.value?.kill()
 
   if (gsapContext) {
     gsapContext.revert()
@@ -751,7 +903,7 @@ onBeforeUnmount(() => {
 }
 
 .sm-scope .sm-socials-link {
-  font-size: 1.2rem;
+  font-size: 0.95rem;
   font-weight: 500;
   color: #111;
   text-decoration: none;
@@ -788,7 +940,7 @@ onBeforeUnmount(() => {
   position: relative;
   color: #000;
   font-weight: 600;
-  font-size: 3rem;
+  font-size: 2.8rem;
   cursor: pointer;
   line-height: 1;
   letter-spacing: -2px;
@@ -798,7 +950,7 @@ onBeforeUnmount(() => {
     color 0.25s;
   display: inline-block;
   text-decoration: none;
-  padding-right: 1.4em;
+  padding-right: 2.0em;
 }
 
 .sm-scope .sm-panel-itemLabel {
@@ -850,6 +1002,50 @@ onBeforeUnmount(() => {
   .sm-scope .staggered-menu-wrapper[data-open] .sm-logo-img {
     filter: invert(100%);
   }
+}
+
+.sm-scope .sm-theme-switcher-inline {
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+  padding: 0.25rem;
+  background: rgba(0, 0, 0, 0.08);
+  border-radius: 6px;
+  margin-left: 1rem;
+}
+
+.sm-scope .sm-theme-btn-inline {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  padding: 0;
+  background: transparent;
+  border: none;
+  border-radius: 4px;
+  color: #333;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.sm-scope .sm-theme-btn-inline:hover {
+  background: rgba(0, 0, 0, 0.05);
+}
+
+.sm-scope .sm-theme-btn-inline:focus-visible {
+  outline: 2px solid var(--sm-accent, #27FF64);
+  outline-offset: 2px;
+}
+
+.sm-scope .sm-theme-btn-inline-active {
+  background: rgba(0, 0, 0, 0.15);
+  color: #000;
+}
+
+.sm-scope .sm-theme-btn-inline-active:hover {
+  background: rgba(0, 0, 0, 0.15);
 }
 </style>
 

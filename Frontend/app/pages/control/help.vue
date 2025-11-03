@@ -4,7 +4,7 @@ useHead({
 })
 
 definePageMeta({
-  layout: 'default'
+  layout: 'control'
 })
 
 const faqItems = [
@@ -183,3 +183,4 @@ const faqItems = [
     </div>
   </div>
 </template>
+

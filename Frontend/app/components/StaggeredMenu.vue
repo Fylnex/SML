@@ -1,5 +1,5 @@
 <template>
-  <div class="w-full h-full sm-scope overflow-hidden">
+  <div class="w-full h-full sm-scope overflow-hidden pointer-events-none">
     <div
       :class="(className ? className + ' ' : '') + 'staggered-menu-wrapper relative w-full h-full z-40'"
       :style="accentColor ? { '--sm-accent': accentColor } : undefined"
@@ -75,8 +75,8 @@
       <aside
         id="staggered-menu-panel"
         ref="panelRef"
-        class="top-0 right-0 z-10 absolute flex flex-col bg-white backdrop-blur-[12px] p-[6em_2em_2em_2em] h-full overflow-y-auto staggered-menu-panel"
-        style="-webkit-backdrop-filter: blur(12px)"
+        class="top-0 right-0 z-10 absolute flex flex-col bg-white backdrop-blur-[12px] p-[6em_2em_2em_2em] h-full overflow-y-auto staggered-menu-panel pointer-events-auto"
+        style="backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px)"
         :aria-hidden="!open"
       >
         <div class="flex flex-col flex-1 gap-5 sm-panel-inner">

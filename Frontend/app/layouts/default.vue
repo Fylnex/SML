@@ -32,7 +32,7 @@ const handleMenuClose = () => console.log('Menu closed')
 <template>
   <div class="min-h-screen flex flex-col relative">
     <!-- Staggered Menu -->
-    <div class="fixed inset-0 z-50">
+    <div class="fixed inset-0 z-50 pointer-events-none">
       <ClientOnly>
         <StaggeredMenu
           position="right"

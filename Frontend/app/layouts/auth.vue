@@ -39,7 +39,7 @@ useSeoMeta({
           <div class="bg-white dark:bg-gray-800 py-8 px-4 shadow-xl sm:rounded-lg sm:px-10">
             <!-- Логотип -->
             <div class="flex justify-center mb-8">
-              <img src="/logo.png" alt="SML Logo" class="size-16" />
+              <img src="/logo.png" alt="SML Logo" class="h-20 w-auto max-w-full" />
             </div>
 
             <!-- Форма -->
@@ -50,10 +50,10 @@ useSeoMeta({
 
       <!-- Футер -->
       <div class="flex flex-col items-center gap-2 mt-8">
-        <UButton variant="link" color="neutral" size="sm" class="text-xs">
+        <UButton to="/terms" variant="link" color="neutral" size="sm" class="text-xs">
           Условия использования
         </UButton>
-        <UButton variant="link" color="neutral" size="sm" class="text-xs">
+        <UButton to="/privacy" variant="link" color="neutral" size="sm" class="text-xs">
           Политика конфиденциальности
         </UButton>
       </div>
